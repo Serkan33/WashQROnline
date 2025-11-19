@@ -14,9 +14,55 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        // Super Admin rolü (Shield tarafından otomatik oluşturulur)
-        // Tüm yetkilere sahiptir
-        
+        // Super Admin rolünü oluştur
+        $superAdmin = Role::firstOrCreate([
+            'name' => 'super_admin',
+            'guard_name' => 'web'
+        ]);
+
+        // Super Admin için tüm izinleri tanımla
+        $superAdminPermissions = [
+            // Kullanıcı yönetimi
+            'view_any_user',
+            'view_user',
+            'create_user',
+            'update_user',
+            'delete_user',
+            'restore_user',
+            'force_delete_user',
+
+            // Rol yönetimi
+            'view_any_role',
+            'view_role',
+            'create_role',
+            'update_role',
+            'delete_role',
+
+            // Shield yönetimleri
+            'view_shield::role',
+            'create_shield::role',
+            'update_shield::role',
+            'delete_shield::role',
+
+            // Dashboard ve sistem erişimi
+            'page_Dashboard',
+            'widget_StatsOverviewWidget',
+
+            // Tüm sistem yönetimi
+            'manage_system',
+            'view_admin_panel',
+        ];
+
+        // Super Admin izinlerini oluştur ve ata
+        foreach ($superAdminPermissions as $permission) {
+            $perm = Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web'
+            ]);
+
+            $superAdmin->givePermissionTo($perm);
+        }
+
         // Firma Admin rolünü oluştur
         $firmaAdmin = Role::firstOrCreate([
             'name' => 'firma_admin',
@@ -32,7 +78,7 @@ class RoleSeeder extends Seeder
             'create_user',
             'update_user',
             'delete_user',
-            
+
             // Dashboard erişimi
             'page_Dashboard',
         ];
@@ -43,7 +89,7 @@ class RoleSeeder extends Seeder
                 'name' => $permission,
                 'guard_name' => 'web'
             ]);
-            
+
             $firmaAdmin->givePermissionTo($perm);
         }
 

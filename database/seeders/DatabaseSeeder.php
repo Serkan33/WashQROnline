@@ -12,9 +12,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Rolleri oluştur
+        // Rolleri ve demo kullanıcıları oluştur
         $this->call([
             RoleSeeder::class,
+            DemoUserSeeder::class,
         ]);
     }
 }
